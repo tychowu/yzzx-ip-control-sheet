@@ -1,0 +1,4 @@
+interface:
+  display_name: "yzzx ip control"
+  short_description: "创建高写实人物控制图，并在确认后生成多套服装控制版本"
+  default_prompt: "使用 $yzzx-ip-control-sheet 创建高写实人物控制图，并在确认后生成多套换装版本。"
