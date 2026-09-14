@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Generated output, private references and local secrets never belong here
+/output/
+/references-private/
+.env
+.env.*
+!.env.example
+*.pem
+*.key

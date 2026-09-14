@@ -2,6 +2,8 @@
 
 一个用于 Codex 的真人角色控制图工作流 Skill。它通过分阶段收集真人参考照片，生成高写实人物控制图，并在用户确认身份还原后，为同一人物制作多套换装控制图。
 
+团队改进与发布请看 [CONTRIBUTING.md](CONTRIBUTING.md)。当前版本见 [VERSION](VERSION)，每个版本的更新内容见 [CHANGELOG.md](CHANGELOG.md)。每次发布必须递增语义化版本，并逐项列明实际更新内容；自动检查通过后按该版本创建 Git 标签和 GitHub Release。
+
 ## 适用场景
 
 - 真人角色三视图与人物控制图
@@ -72,6 +74,8 @@ git -C ~/.codex/skills/yzzx-ip-control-sheet pull --ff-only
 
 Skill 会从询问人物名字开始，每次只索取当前阶段需要的资料。请按照提示逐轮上传照片，不需要一次提交全部内容。
 
+首次生图前会检查官方正式 Release 与项目 main。新版正式 Release 只自动安全同步全局安装；项目 main 更新仍会先展示提交时间及更新内容并询问，用户已经明确要求 pull 时除外。普通 pull 不会传播到全局安装。具体规则见 [版本检查流程](references/version-check.md)。
+
 ## 设计原则
 
 - 原始真人照片始终是人物身份的权威依据。
@@ -87,11 +91,18 @@ Skill 会从询问人物名字开始，每次只索取当前阶段需要的资�
 ```text
 yzzx-ip-control-sheet/
 ├── SKILL.md                       # Skill 入口、阶段流程与核心约束
+├── VERSION                        # 当前语义化版本
+├── CHANGELOG.md                   # 每个版本的更新内容
+├── CONTRIBUTING.md                # 团队提交与发布规则
+├── scripts/
+│   └── check_repository.py        # 版本、链接、隐私与仓库结构检查
+├── .github/workflows/             # 自动检查与 GitHub Release 发布
 ├── agents/
 │   └── openai.yaml               # Codex 界面名称与默认调用提示
 └── references/
     ├── production.md             # 模块化制作、合成与验收流程
-    └── prompt-contracts.md        # 主图、修复与换装的提示词契约
+    ├── prompt-contracts.md        # 主图、修复与换装的提示词契约
+    └── version-check.md           # 生图前版本检查与分级同步
 ```
 
 执行时应以 [`SKILL.md`](SKILL.md) 为准；生成或编辑图像前，还需读取其中指定的相关参考文件。

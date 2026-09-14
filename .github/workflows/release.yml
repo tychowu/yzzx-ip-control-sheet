@@ -1,0 +1,39 @@
+name: Publish version
+on:
+  workflow_run:
+    workflows: [Skill checks]
+    types: [completed]
+    branches: [main]
+permissions:
+  contents: write
+concurrency:
+  group: publish-version
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - name: Publish version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          version=$(tr -d '\r\n' < VERSION)
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          if gh release view "v$version" >/dev/null 2>&1; then
+            echo "Release already exists; never overwrite it."
+            exit 0
+          fi
+          awk -v version="$version" '
+            $0 ~ "^## " version " · " {active=1; next}
+            active && /^## / {exit}
+            active {print}
+          ' CHANGELOG.md > release-notes.md
+          grep -Eq '^[-*] ' release-notes.md
+          gh release create "v$version" --target "$RELEASE_SHA" --title "v$version" --notes-file release-notes.md
