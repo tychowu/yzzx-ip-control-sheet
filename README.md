@@ -72,9 +72,9 @@ git -C ~/.codex/skills/yzzx-ip-control-sheet pull --ff-only
 使用 $yzzx-ip-control-sheet 为我创建真人角色控制图。
 ```
 
-Skill 会从询问人物名字开始，每次只索取当前阶段需要的资料。请按照提示逐轮上传照片，不需要一次提交全部内容。
+完成调用时版本检查并处理用户的更新选择后，Skill 会从询问人物名字开始，每次只索取当前阶段需要的资料。请按照提示逐轮上传照片，不需要一次提交全部内容。
 
-首次生图前会检查官方正式 Release 与项目 main。新版正式 Release 只自动安全同步全局安装；项目 main 更新仍会先展示提交时间及更新内容并询问，用户已经明确要求 pull 时除外。普通 pull 不会传播到全局安装。具体规则见 [版本检查流程](references/version-check.md)。
+每次调用 Skill 后，版本检查都是第一步，在人物资料收集和制作流程之前完成。系统会根据实际加载路径识别本次调用的是项目级还是全局级 Skill，只检查当前调用副本，并与 GitHub 最新正式 Release 比较。版本不同时会列出当前版本、仓库版本、相差的正式版本数量及所有跨越版本的更新内容，再询问是否更新；未经同意不会更新。具体规则见 [调用时版本检查流程](references/version-check.md)。
 
 ## 设计原则
 
@@ -102,7 +102,7 @@ yzzx-ip-control-sheet/
 └── references/
     ├── production.md             # 模块化制作、合成与验收流程
     ├── prompt-contracts.md        # 主图、修复与换装的提示词契约
-    └── version-check.md           # 生图前版本检查与分级同步
+    └── version-check.md           # 调用第一步的当前副本版本检查
 ```
 
 执行时应以 [`SKILL.md`](SKILL.md) 为准；生成或编辑图像前，还需读取其中指定的相关参考文件。
